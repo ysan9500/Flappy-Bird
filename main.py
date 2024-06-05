@@ -16,7 +16,11 @@ class Game:
         Background(self.all_sprites)
 
     def run(self):
+        last_time = time.time()
         while True:
+            dt = time.time() - last_time
+            last_time =  time.time()
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -24,7 +28,7 @@ class Game:
 
             self.display_surf.fill('white')
             self.all_sprites.draw(self.display_surf)
-
+            self.all_sprites.update(dt)
             self.all_sprites.draw(self.display_surf)
 
             pygame.display.update()
