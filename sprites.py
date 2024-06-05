@@ -42,3 +42,23 @@ class Base(pygame.sprite.Sprite):
         if self.rect.centerx <= 0:
             self.pos.x = 0
         self.rect.x = round(self.pos.x)
+
+class Bird(pygame.sprite.Sprite):
+    def __init__(self, groups, scale_factor):
+        super().__init__(groups)
+        self.import_frames(scale_factor)
+        self.frame_index = 0
+        self.image = self.frames[self.frame_index]
+
+        self.rect = self.image.get_rect(midleft = (WINDOW_WIDTH/20,WINDOW_HEIGHT/2))
+
+    def import_frames(self, scale_factor):
+        bluebird_img_1 = pygame.image.load(f'sprites/bluebird-downflap.png').convert_alpha()
+        bluebird_img_1 = pygame.transform.scale(bluebird_img_1, pygame.math.Vector2(bluebird_img_1.get_size())*scale_factor)
+        bluebird_img_2 = pygame.image.load(f'sprites/bluebird-midflap.png').convert_alpha()
+        bluebird_img_2 = pygame.transform.scale(bluebird_img_2, pygame.math.Vector2(bluebird_img_2.get_size())*scale_factor)
+        bluebird_img_3 = pygame.image.load(f'sprites/bluebird-upflap.png').convert_alpha()
+        bluebird_img_3 = pygame.transform.scale(bluebird_img_3, pygame.math.Vector2(bluebird_img_3.get_size())*scale_factor)
+        self.frames = [bluebird_img_1, bluebird_img_2, bluebird_img_3]
+        
+    

@@ -1,6 +1,6 @@
 import pygame, sys, time
 from settings import *
-from sprites import Background, Base
+from sprites import Background, Base, Bird
 
 class Game:
     def __init__(self):
@@ -19,6 +19,7 @@ class Game:
 
         Background(self.all_sprites, self.scale_factor)
         Base(self.all_sprites, self.scale_factor)
+        Bird(self.all_sprites, self.scale_factor)
 
     def run(self):
         last_time = time.time()
