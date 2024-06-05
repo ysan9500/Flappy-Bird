@@ -51,6 +51,10 @@ class Bird(pygame.sprite.Sprite):
         self.image = self.frames[self.frame_index]
 
         self.rect = self.image.get_rect(midleft = (WINDOW_WIDTH/20,WINDOW_HEIGHT/2))
+        self.pos = pygame.math.Vector2(self.rect.topleft)
+
+        self.gravity = 20
+        self.direction = 0
 
     def import_frames(self, scale_factor):
         bluebird_img_1 = pygame.image.load(f'sprites/bluebird-downflap.png').convert_alpha()
@@ -60,5 +64,14 @@ class Bird(pygame.sprite.Sprite):
         bluebird_img_3 = pygame.image.load(f'sprites/bluebird-upflap.png').convert_alpha()
         bluebird_img_3 = pygame.transform.scale(bluebird_img_3, pygame.math.Vector2(bluebird_img_3.get_size())*scale_factor)
         self.frames = [bluebird_img_1, bluebird_img_2, bluebird_img_3]
-        
-    
+
+    def apply_gravity(self, dt):
+        self.direction += self.gravity * dt
+        self.pos.y += self.direction
+        self.rect.y = round(self.pos.y)
+
+    def flap(self):
+        self.direction = -8
+
+    def update(self, dt):
+        self.apply_gravity(dt)

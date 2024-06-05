@@ -19,7 +19,7 @@ class Game:
 
         Background(self.all_sprites, self.scale_factor)
         Base(self.all_sprites, self.scale_factor)
-        Bird(self.all_sprites, self.scale_factor)
+        self.bird = Bird(self.all_sprites, self.scale_factor)
 
     def run(self):
         last_time = time.time()
@@ -31,6 +31,8 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.bird.flap()
 
             self.display_surf.fill('white')
             self.all_sprites.draw(self.display_surf)
