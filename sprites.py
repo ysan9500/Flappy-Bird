@@ -55,7 +55,7 @@ class Bird(pygame.sprite.Sprite):
         self.pos = pygame.math.Vector2(self.rect.topleft)
 
         self.gravity = 20
-        self.direction = 0
+        self.direction = -4
         self.flapframe = 0
         self.mask = pygame.mask.from_surface(self.image)
 
@@ -97,7 +97,7 @@ class Bird(pygame.sprite.Sprite):
     def update(self, dt):
         self.apply_gravity(dt)
         self.animate(dt)
-        self.rotate()
+        #self.rotate()
 
 class Pipe(pygame.sprite.Sprite):
     def __init__(self, groups, scale_factor):

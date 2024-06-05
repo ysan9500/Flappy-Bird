@@ -10,6 +10,7 @@ class Game:
         self.favicon = pygame.image.load('favicon.ico').convert()
         pygame.display.set_icon(self.favicon)
         self.clock = pygame.time.Clock()
+        self.active = True
 
         self.all_sprites = pygame.sprite.Group()
         self.collision_sprites = pygame.sprite.Group()
@@ -25,23 +26,28 @@ class Game:
         pygame.time.set_timer(self.pipe_timer, 1400)
         self.pipes = []
 
-        self.font = pygame.font.Font('font/flappy-font.ttf', 30)
+        self.font = pygame.font.Font('font/flappy-font.ttf', 50)
         self.score = 0
+
+        self.menu_surf = pygame.image.load('sprites/message.png')
+        self.menu_rect = self.menu_surf.get_rect(center = (WINDOW_WIDTH/2,WINDOW_HEIGHT/2))
+
 
     def collisions(self):
         for pipe in self.pipes:
             if pygame.sprite.collide_mask(self.bird, pipe):
-                pygame.quit()
-                sys.exit()
+                self.active = False
+                self.bird.kill()
         if pygame.sprite.collide_mask(self.bird, self.base):
-            pygame.quit()
-            sys.exit()
+            self.active = False
+            self.bird.kill()
         if self.bird.rect.top <= 0:
-            pygame.quit()
-            sys.exit()
+            self.active = False
+            self.bird.kill()
 
     def display_score(self):
-        self.score = int(pygame.time.get_ticks() / 1000)
+        if self.active:
+            self.score = int(pygame.time.get_ticks() / 1000)
 
         score_surf = self.font.render(str(self.score),True, 'black')
         score_rect = score_surf.get_rect(midtop = (WINDOW_WIDTH/2, WINDOW_HEIGHT/10))
@@ -58,16 +64,24 @@ class Game:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.bird.flap()
+                    if self.active: self.bird.flap()
+                    else: 
+                        self.active = True
+                        self.bird = Bird(self.all_sprites, self.scale_factor)
                 if event.type == self.pipe_timer:
                     self.pipes.append(Pipe([self.all_sprites, self.collision_sprites], self.scale_factor))
 
             self.display_surf.fill('white')
             self.all_sprites.draw(self.display_surf)
             self.all_sprites.update(dt)
-            self.collisions()
             self.all_sprites.draw(self.display_surf)
             self.display_score()
+
+            if self.active:
+                self.collisions()
+            else:
+                self.display_surf.blit(self.menu_surf, self.menu_rect)
+
             pygame.display.update()
             self.clock.tick(FRAMERATE)
 
