@@ -11,10 +11,18 @@ class Game:
 
         self.all_sprites = pygame.sprite.Group()
         self.collision_sprites = pygame.sprite.Group()
+        Background(self.all_sprites)
 
     def run(self):
         while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
             self.display_surf.fill('white')
+            self.all_sprites.draw(self.display_surf)
+
             self.all_sprites.draw(self.display_surf)
 
             pygame.display.update()
