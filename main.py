@@ -25,6 +25,9 @@ class Game:
         pygame.time.set_timer(self.pipe_timer, 1400)
         self.pipes = []
 
+        self.font = pygame.font.Font('font/flappy-font.ttf', 30)
+        self.score = 0
+
     def collisions(self):
         for pipe in self.pipes:
             if pygame.sprite.collide_mask(self.bird, pipe):
@@ -33,6 +36,16 @@ class Game:
         if pygame.sprite.collide_mask(self.bird, self.base):
             pygame.quit()
             sys.exit()
+        if self.bird.rect.top <= 0:
+            pygame.quit()
+            sys.exit()
+
+    def display_score(self):
+        self.score = int(pygame.time.get_ticks() / 1000)
+
+        score_surf = self.font.render(str(self.score),True, 'black')
+        score_rect = score_surf.get_rect(midtop = (WINDOW_WIDTH/2, WINDOW_HEIGHT/10))
+        self.display_surf.blit(score_surf, score_rect)
 
     def run(self):
         last_time = time.time()
@@ -54,7 +67,7 @@ class Game:
             self.all_sprites.update(dt)
             self.collisions()
             self.all_sprites.draw(self.display_surf)
-
+            self.display_score()
             pygame.display.update()
             self.clock.tick(FRAMERATE)
 
