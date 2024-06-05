@@ -88,6 +88,10 @@ class Bird(pygame.sprite.Sprite):
         if int(self.flapframe) == 0:
             self.image = self.frames[2]
 
+    def rotate(self):
+        rotated_bird = pygame.transform.rotozoom(self.image, -self.direction * 2, 1)
+        self.image = rotated_bird
     def update(self, dt):
         self.apply_gravity(dt)
         self.animate(dt)
+        self.rotate()
