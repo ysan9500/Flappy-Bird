@@ -1,6 +1,6 @@
 import pygame, sys, time
 from settings import *
-from sprites import Background
+from sprites import Background, Base
 
 class Game:
     def __init__(self):
@@ -13,7 +13,12 @@ class Game:
 
         self.all_sprites = pygame.sprite.Group()
         self.collision_sprites = pygame.sprite.Group()
-        Background(self.all_sprites)
+
+        background_width = pygame.image.load('sprites/background-day.png').get_width()
+        self.scale_factor = WINDOW_WIDTH / background_width
+
+        Background(self.all_sprites, self.scale_factor)
+        Base(self.all_sprites, self.scale_factor)
 
     def run(self):
         last_time = time.time()
