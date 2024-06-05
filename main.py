@@ -1,6 +1,6 @@
 import pygame, sys, time
 from settings import *
-from sprites import Background, Base, Bird
+from sprites import Background, Base, Bird, Pipe
 
 class Game:
     def __init__(self):
@@ -21,6 +21,9 @@ class Game:
         Base(self.all_sprites, self.scale_factor)
         self.bird = Bird(self.all_sprites, self.scale_factor)
 
+        self.pipe_timer = pygame.USEREVENT + 1
+        pygame.time.set_timer(self.pipe_timer, 1400)
+
     def run(self):
         last_time = time.time()
         while True:
@@ -33,6 +36,8 @@ class Game:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.bird.flap()
+                if event.type == self.pipe_timer:
+                    Pipe(self.all_sprites, self.scale_factor)
 
             self.display_surf.fill('white')
             self.all_sprites.draw(self.display_surf)
@@ -40,6 +45,7 @@ class Game:
             self.all_sprites.draw(self.display_surf)
 
             pygame.display.update()
+            self.clock.tick(FRAMERATE)
 
 if __name__ == '__main__':
     game = Game()

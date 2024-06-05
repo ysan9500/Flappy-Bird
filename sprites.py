@@ -76,22 +76,47 @@ class Bird(pygame.sprite.Sprite):
         self.flapframe = 4
 
     def animate(self, dt):
-        self.flapframe -= 5*dt
-        if int(self.flapframe) == 4:
-            self.image = self.frames[2]
-        if int(self.flapframe) == 3:
-            self.image = self.frames[1]
-        if int(self.flapframe) == 2:
-            self.image = self.frames[0]
-        if int(self.flapframe) == 1:
-            self.image = self.frames[1]
-        if int(self.flapframe) == 0:
-            self.image = self.frames[2]
+        if self.flapframe > -1:
+            self.flapframe -= 5*dt
+            if int(self.flapframe) == 4:
+                self.image = self.frames[2]
+            if int(self.flapframe) == 3:
+                self.image = self.frames[1]
+            if int(self.flapframe) == 2:
+                self.image = self.frames[0]
+            if int(self.flapframe) == 1:
+                self.image = self.frames[1]
+            if int(self.flapframe) == 0:
+                self.image = self.frames[2]
 
     def rotate(self):
-        rotated_bird = pygame.transform.rotozoom(self.image, -self.direction * 2, 1)
+        rotated_bird = pygame.transform.rotozoom(self.image, -self.direction, 1)
         self.image = rotated_bird
     def update(self, dt):
         self.apply_gravity(dt)
         self.animate(dt)
         self.rotate()
+
+class Pipe(pygame.sprite.Sprite):
+    def __init__(self, groups, scale_factor):
+        super().__init__(groups)
+        pipe_img = pygame.image.load('sprites\pipe-green.png').convert_alpha()
+        pipe_img = pygame.transform.scale(pipe_img, pygame.math.Vector2(pipe_img.get_size())*scale_factor)
+        self.image = pygame.Surface((pipe_img.get_width(), WINDOW_HEIGHT + 100), pygame.SRCALPHA)
+        self.image.blit(pipe_img, (0,randint(550, 600)))
+        pipe_img = pygame.transform.flip(self.image, False, True)
+        self.image.blit(pipe_img, (0,0))
+        self.image = self.image.convert_alpha()
+        
+        x = WINDOW_WIDTH + randint(40, 100)
+        y = WINDOW_HEIGHT + randint(0,100)
+        self.rect = self.image.get_rect(midbottom = (x,y))
+
+
+        self.pos = pygame.math.Vector2(self.rect.topleft)
+
+    def update(self, dt):
+        self.pos.x -= 400 * dt
+        self.rect.x = round(self.pos.x)
+        if self.rect.right <= -100:
+            self.kill()
