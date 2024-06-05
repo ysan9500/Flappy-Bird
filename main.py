@@ -18,11 +18,21 @@ class Game:
         self.scale_factor = WINDOW_WIDTH / background_width
 
         Background(self.all_sprites, self.scale_factor)
-        Base(self.all_sprites, self.scale_factor)
+        self.base = Base([self.all_sprites, self.collision_sprites], self.scale_factor)
         self.bird = Bird(self.all_sprites, self.scale_factor)
 
         self.pipe_timer = pygame.USEREVENT + 1
         pygame.time.set_timer(self.pipe_timer, 1400)
+        self.pipes = []
+
+    def collisions(self):
+        for pipe in self.pipes:
+            if pygame.sprite.collide_mask(self.bird, pipe):
+                pygame.quit()
+                sys.exit()
+        if pygame.sprite.collide_mask(self.bird, self.base):
+            pygame.quit()
+            sys.exit()
 
     def run(self):
         last_time = time.time()
@@ -37,11 +47,12 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.bird.flap()
                 if event.type == self.pipe_timer:
-                    Pipe(self.all_sprites, self.scale_factor)
+                    self.pipes.append(Pipe([self.all_sprites, self.collision_sprites], self.scale_factor))
 
             self.display_surf.fill('white')
             self.all_sprites.draw(self.display_surf)
             self.all_sprites.update(dt)
+            self.collisions()
             self.all_sprites.draw(self.display_surf)
 
             pygame.display.update()

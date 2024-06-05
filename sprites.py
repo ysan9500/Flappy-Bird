@@ -36,6 +36,7 @@ class Base(pygame.sprite.Sprite):
         self.image.blit(base_img, (base_width,0))
         self.rect = self.image.get_rect(bottomleft = (0,WINDOW_HEIGHT + 65))
         self.pos = pygame.math.Vector2(self.rect.topleft)
+        self.mask = pygame.mask.from_surface(self.image)
 
     def update(self, dt):
         self.pos.x -= 200 * dt
@@ -56,6 +57,7 @@ class Bird(pygame.sprite.Sprite):
         self.gravity = 20
         self.direction = 0
         self.flapframe = 0
+        self.mask = pygame.mask.from_surface(self.image)
 
     def import_frames(self, scale_factor):
         bluebird_img_1 = pygame.image.load(f'sprites/bluebird-downflap.png').convert_alpha()
@@ -111,6 +113,7 @@ class Pipe(pygame.sprite.Sprite):
         x = WINDOW_WIDTH + randint(40, 100)
         y = WINDOW_HEIGHT + randint(0,100)
         self.rect = self.image.get_rect(midbottom = (x,y))
+        self.mask = pygame.mask.from_surface(self.image)
 
 
         self.pos = pygame.math.Vector2(self.rect.topleft)
