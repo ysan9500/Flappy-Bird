@@ -1,6 +1,7 @@
 import pygame, sys, time
 from settings import *
 from sprites import Background, Base, Bird, Pipe
+# from pygame_screen_recorder import pygame_screen_recorder as pgr
 
 class Game:
     def __init__(self):
@@ -11,6 +12,10 @@ class Game:
         pygame.display.set_icon(self.favicon)
         self.clock = pygame.time.Clock()
         self.active = True
+
+        self.start_time = 0
+
+        #self.recrdr = pgr("demo.gif")
 
         self.all_sprites = pygame.sprite.Group()
         self.collision_sprites = pygame.sprite.Group()
@@ -52,7 +57,7 @@ class Game:
     def display_score(self):
         if self.active:
             temp = self.score
-            self.score = int(pygame.time.get_ticks() / 1000)
+            self.score = int((pygame.time.get_ticks() - self.start_time)/ 1000) 
             if int(temp) != int(self.score): self.point_sound.play()
         score_surf = self.font.render(str(self.score),True, 'black')
         score_rect = score_surf.get_rect(midtop = (WINDOW_WIDTH/2, WINDOW_HEIGHT/10))
@@ -61,17 +66,20 @@ class Game:
     def run(self):
         last_time = time.time()
         while True:
+            
             dt = time.time() - last_time
             last_time =  time.time()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    #game.recrdr.save()
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.active: self.bird.flap()
                     else: 
                         self.active = True
+                        self.start_time = pygame.time.get_ticks()
                         self.bird = Bird(self.all_sprites, self.scale_factor)
                 if event.type == self.pipe_timer:
                     self.pipes.append(Pipe([self.all_sprites, self.collision_sprites], self.scale_factor))
@@ -86,10 +94,11 @@ class Game:
                 self.collisions()
             else:
                 self.display_surf.blit(self.menu_surf, self.menu_rect)
-
+            #self.recrdr.click(self.display_surf)
             pygame.display.update()
             self.clock.tick(FRAMERATE)
 
 if __name__ == '__main__':
     game = Game()
     game.run()
+    
