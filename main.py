@@ -32,23 +32,28 @@ class Game:
         self.menu_surf = pygame.image.load('sprites/message.png')
         self.menu_rect = self.menu_surf.get_rect(center = (WINDOW_WIDTH/2,WINDOW_HEIGHT/2))
 
-
+        self.hit_sound = pygame.mixer.Sound('audio\hit.ogg')
+        self.point_sound = pygame.mixer.Sound('audio\point.ogg')
     def collisions(self):
         for pipe in self.pipes:
             if pygame.sprite.collide_mask(self.bird, pipe):
                 self.active = False
+                self.hit_sound.play()
                 self.bird.kill()
         if pygame.sprite.collide_mask(self.bird, self.base):
             self.active = False
+            self.hit_sound.play()
             self.bird.kill()
         if self.bird.rect.top <= 0:
             self.active = False
+            self.hit_sound.play()
             self.bird.kill()
 
     def display_score(self):
         if self.active:
+            temp = self.score
             self.score = int(pygame.time.get_ticks() / 1000)
-
+            if int(temp) != int(self.score): self.point_sound.play()
         score_surf = self.font.render(str(self.score),True, 'black')
         score_rect = score_surf.get_rect(midtop = (WINDOW_WIDTH/2, WINDOW_HEIGHT/10))
         self.display_surf.blit(score_surf, score_rect)

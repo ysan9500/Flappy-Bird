@@ -58,6 +58,7 @@ class Bird(pygame.sprite.Sprite):
         self.direction = -4
         self.flapframe = 0
         self.mask = pygame.mask.from_surface(self.image)
+        self.wing_sound = pygame.mixer.Sound('audio\wing.ogg')
 
     def import_frames(self, scale_factor):
         bluebird_img_1 = pygame.image.load(f'sprites/bluebird-downflap.png').convert_alpha()
@@ -74,6 +75,7 @@ class Bird(pygame.sprite.Sprite):
         self.rect.y = round(self.pos.y)
 
     def flap(self):
+        self.wing_sound.play()
         self.direction = -8
         self.flapframe = 4
 
