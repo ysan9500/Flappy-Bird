@@ -7,6 +7,8 @@ class Game:
         pygame.init()
         self.display_surf = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption('Flappy Bird')
+        self.favicon = pygame.image.load('favicon.ico').convert()
+        pygame.display.set_icon(self.favicon)
         self.clock = pygame.time.Clock()
 
         self.all_sprites = pygame.sprite.Group()
